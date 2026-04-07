@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "build": "echo \"No build step configured yet for @silver/widget\"",
+    "build": "echo \"No build step required for @silver/widget placeholder\"",
     "dev": "echo \"No dev step configured yet for @silver/widget\"",
     "lint": "echo \"No lint step configured yet for @silver/widget\"",
     "test": "echo \"No tests configured yet for @silver/widget\"",

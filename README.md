@@ -47,6 +47,15 @@ This repository is now bootstrapped to match the architecture in `codex.md` for 
 - Each app/package currently has placeholder scripts so the workspace can execute end-to-end checks immediately.
 - `tsconfig.base.json` includes starter path aliases for shared package usage.
 
+## Deployment shape
+
+- `apps/api` is a Vercel Functions app with API routes in `api/` and a small static landing page in `public/`.
+- `apps/web` is a static placeholder for the internal dashboard until the real Next.js app is added.
+- `apps/widget` is a static placeholder for the embeddable widget, including a browser-deliverable script entrypoint.
+- `apps/worker` is a minimal trigger-oriented worker placeholder. It is Vercel-compatible for lightweight function or cron-style entrypoints, but a real queue worker may later move to dedicated infrastructure.
+
+When creating Vercel projects in this monorepo, point each project at its app folder as the Root Directory.
+
 ## Next implementation steps
 
 - Replace placeholder scripts with real app/package commands.

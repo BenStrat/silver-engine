@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Silver Engine Worker</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "SF Pro Text", "Segoe UI", sans-serif;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(circle at top left, #d1fae5, transparent 36%),
+          radial-gradient(circle at bottom right, #bae6fd, transparent 30%),
+          linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+        color: #0f172a;
+      }
+
+      main {
+        width: min(40rem, calc(100% - 2rem));
+        padding: 2rem;
+        border-radius: 1.25rem;
+        background: rgba(255, 255, 255, 0.88);
+        box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
+        backdrop-filter: blur(14px);
+      }
+
+      h1 {
+        margin: 0 0 0.75rem;
+        font-size: clamp(2rem, 4vw, 2.75rem);
+      }
+
+      p {
+        margin: 0 0 1rem;
+        line-height: 1.6;
+      }
+
+      code {
+        padding: 0.15rem 0.35rem;
+        border-radius: 0.35rem;
+        background: #e2e8f0;
+      }
+
+      a {
+        color: #0369a1;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Silver Engine Worker</h1>
+      <p>
+        This app is a placeholder for background jobs and trigger-style work.
+      </p>
+      <p>
+        Check <a href="/health">/health</a> for readiness, or POST to
+        <code>/api/trigger</code> to simulate a job enqueue.
+      </p>
+    </main>
+  </body>
+</html>
