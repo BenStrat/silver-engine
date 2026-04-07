@@ -2,11 +2,26 @@
   "name": "@silver/types",
   "private": true,
   "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
-    "build": "echo \"No build step configured yet for @silver/types\"",
-    "dev": "echo \"No dev step configured yet for @silver/types\"",
-    "lint": "echo \"No lint step configured yet for @silver/types\"",
-    "test": "echo \"No tests configured yet for @silver/types\"",
-    "typecheck": "echo \"No typecheck step configured yet for @silver/types\""
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "test": "pnpm run build && node --test ./test/contracts.test.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "zod": "^4.3.6"
   }
 }

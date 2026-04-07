@@ -1,0 +1,357 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  admin
+  member
+}
+
+enum DeviceType {
+  desktop
+  tablet
+  mobile
+}
+
+enum ReportStatus {
+  new
+  triaged
+  attached
+}
+
+enum ReportSource {
+  widget
+  extension
+  manual
+}
+
+enum CaseStatus {
+  new
+  investigating
+  needs_info
+  confirmed
+  duplicate
+  wont_fix
+  sent_to_linear
+}
+
+enum CaseSeverity {
+  low
+  medium
+  high
+  critical
+}
+
+enum AttachmentKind {
+  screenshot
+  image
+  log
+}
+
+enum JourneyEventType {
+  navigation
+  click
+  input
+  submit
+  console_error
+  network_error
+}
+
+enum AIDraftStatus {
+  pending
+  completed
+  failed
+}
+
+enum LinearProviderType {
+  oauth
+  api_key
+}
+
+model Organization {
+  id               String            @id @default(cuid())
+  name             String
+  users            User[]
+  projects         Project[]
+  reports          Report[]
+  cases            Case[]
+  linearWorkspaces LinearWorkspace[]
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+
+  @@map("organizations")
+}
+
+model User {
+  id                         String               @id @default(cuid())
+  organizationId             String               @map("organization_id")
+  email                      String
+  name                       String
+  role                       UserRole
+  organization               Organization         @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  createdReports             Report[]             @relation("ReportCreatedBy")
+  assignedCases              Case[]               @relation("CaseAssignee")
+  authoredComments           CaseComment[]        @relation("CaseCommentAuthor")
+  createdReproductionRecords ReproductionRecord[] @relation("ReproductionRecordCreatedBy")
+  uploadedAttachments        Attachment[]         @relation("AttachmentUploadedBy")
+  createdAIDrafts            AIDraft[]            @relation("AIDraftCreatedBy")
+  createdAt                  DateTime             @default(now()) @map("created_at")
+  updatedAt                  DateTime             @updatedAt @map("updated_at")
+
+  @@unique([organizationId, email])
+  @@index([organizationId])
+  @@map("users")
+}
+
+model Project {
+  id                 String               @id @default(cuid())
+  organizationId     String               @map("organization_id")
+  name               String
+  slug               String
+  defaultEnvironment String?              @map("default_environment")
+  linearTeamId       String?              @map("linear_team_id")
+  organization       Organization         @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  reports            Report[]
+  cases              Case[]
+  linearMappings     LinearProjectMapping[]
+  createdAt          DateTime             @default(now()) @map("created_at")
+  updatedAt          DateTime             @updatedAt @map("updated_at")
+
+  @@unique([organizationId, slug])
+  @@index([organizationId])
+  @@map("projects")
+}
+
+model Report {
+  id                  String         @id @default(cuid())
+  organizationId      String         @map("organization_id")
+  projectId           String         @map("project_id")
+  caseId              String?        @map("case_id")
+  createdByUserId     String         @map("created_by_user_id")
+  commentText         String         @map("comment_text")
+  status              ReportStatus
+  source              ReportSource
+  pageUrl             String         @map("page_url")
+  pageRoute           String         @map("page_route")
+  pageTitle           String         @map("page_title")
+  screenshotUrl       String         @map("screenshot_url")
+  screenshotWidth     Int            @map("screenshot_width")
+  screenshotHeight    Int            @map("screenshot_height")
+  devicePixelRatio    Float          @map("device_pixel_ratio")
+  browserName         String         @map("browser_name")
+  browserVersion      String         @map("browser_version")
+  osName              String         @map("os_name")
+  deviceType          DeviceType     @map("device_type")
+  viewportWidth       Int            @map("viewport_width")
+  viewportHeight      Int            @map("viewport_height")
+  screenWidth         Int            @map("screen_width")
+  screenHeight        Int            @map("screen_height")
+  locale              String?
+  timezone            String?
+  appEnvironment      String?        @map("app_environment")
+  buildSha            String?        @map("build_sha")
+  featureFlagsJson    Json?          @map("feature_flags_json")
+  selectedElementJson Json?          @map("selected_element_json")
+  metadataJson        Json?          @map("metadata_json")
+  organization        Organization   @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  project             Project        @relation(fields: [projectId], references: [id], onDelete: Restrict)
+  case                Case?          @relation("CasePrimaryReports", fields: [caseId], references: [id], onDelete: SetNull)
+  createdByUser       User           @relation("ReportCreatedBy", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  sourceForCases      Case[]         @relation("CaseSourceReport")
+  caseLinks           CaseReport[]
+  attachments         Attachment[]   @relation("ReportAttachments")
+  journeyEvents       JourneyEvent[]
+  createdAt           DateTime       @default(now()) @map("created_at")
+  updatedAt           DateTime       @updatedAt @map("updated_at")
+
+  @@index([projectId, createdAt])
+  @@index([caseId])
+  @@index([organizationId, createdAt])
+  @@map("reports")
+}
+
+model Case {
+  id                  String                @id @default(cuid())
+  organizationId      String                @map("organization_id")
+  projectId           String                @map("project_id")
+  title               String?
+  status              CaseStatus
+  severity            CaseSeverity?
+  assigneeUserId      String?               @map("assignee_user_id")
+  sourceReportId      String?               @map("source_report_id")
+  duplicateOfCaseId   String?               @map("duplicate_of_case_id")
+  aiSummary           String?               @map("ai_summary")
+  organization        Organization          @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  project             Project               @relation(fields: [projectId], references: [id], onDelete: Restrict)
+  assigneeUser        User?                 @relation("CaseAssignee", fields: [assigneeUserId], references: [id], onDelete: SetNull)
+  sourceReport        Report?               @relation("CaseSourceReport", fields: [sourceReportId], references: [id], onDelete: SetNull)
+  duplicateOfCase     Case?                 @relation("CaseDuplicates", fields: [duplicateOfCaseId], references: [id], onDelete: SetNull)
+  duplicateCases      Case[]                @relation("CaseDuplicates")
+  reports             Report[]              @relation("CasePrimaryReports")
+  reportLinks         CaseReport[]
+  comments            CaseComment[]
+  reproductionRecords ReproductionRecord[]
+  attachments         Attachment[]          @relation("CaseAttachments")
+  aiDrafts            AIDraft[]
+  linearIssueLink     LinearIssueLink?
+  createdAt           DateTime              @default(now()) @map("created_at")
+  updatedAt           DateTime              @updatedAt @map("updated_at")
+
+  @@index([projectId, status])
+  @@index([organizationId, updatedAt])
+  @@index([assigneeUserId])
+  @@map("cases")
+}
+
+model CaseReport {
+  id        String   @id @default(cuid())
+  caseId    String   @map("case_id")
+  reportId  String   @map("report_id")
+  case      Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  report    Report   @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([caseId, reportId])
+  @@index([reportId])
+  @@map("case_reports")
+}
+
+model CaseComment {
+  id           String   @id @default(cuid())
+  caseId       String   @map("case_id")
+  authorUserId String   @map("author_user_id")
+  body         String
+  case         Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  authorUser   User     @relation("CaseCommentAuthor", fields: [authorUserId], references: [id], onDelete: Restrict)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([caseId, createdAt])
+  @@map("case_comments")
+}
+
+model ReproductionRecord {
+  id              String   @id @default(cuid())
+  caseId          String   @map("case_id")
+  createdByUserId String   @map("created_by_user_id")
+  reproduced      Boolean
+  environmentsJson Json    @map("environments_json")
+  browserName     String?  @map("browser_name")
+  osName          String?  @map("os_name")
+  viewportWidth   Int?     @map("viewport_width")
+  viewportHeight  Int?     @map("viewport_height")
+  notes           String?
+  case            Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  createdByUser   User     @relation("ReproductionRecordCreatedBy", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@index([caseId])
+  @@map("reproduction_records")
+}
+
+model Attachment {
+  id               String         @id @default(cuid())
+  caseId           String?        @map("case_id")
+  reportId         String?        @map("report_id")
+  uploadedByUserId String         @map("uploaded_by_user_id")
+  kind             AttachmentKind
+  fileUrl          String         @map("file_url")
+  mimeType         String         @map("mime_type")
+  case             Case?          @relation("CaseAttachments", fields: [caseId], references: [id], onDelete: SetNull)
+  report           Report?        @relation("ReportAttachments", fields: [reportId], references: [id], onDelete: SetNull)
+  uploadedByUser   User           @relation("AttachmentUploadedBy", fields: [uploadedByUserId], references: [id], onDelete: Restrict)
+  createdAt        DateTime       @default(now()) @map("created_at")
+
+  @@index([caseId])
+  @@index([reportId])
+  @@map("attachments")
+}
+
+model JourneyEvent {
+  id             String           @id @default(cuid())
+  reportId       String           @map("report_id")
+  eventType      JourneyEventType @map("event_type")
+  eventAt        DateTime         @map("event_at")
+  sequenceNumber Int              @map("sequence_number")
+  payloadJson    Json             @map("payload_json")
+  report         Report           @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  createdAt      DateTime         @default(now()) @map("created_at")
+
+  @@index([reportId, sequenceNumber])
+  @@map("journey_events")
+}
+
+model AIDraft {
+  id                   String        @id @default(cuid())
+  caseId               String        @map("case_id")
+  createdByUserId      String        @map("created_by_user_id")
+  status               AIDraftStatus
+  title                String?
+  summary              String?
+  stepsToReproduceJson Json?         @map("steps_to_reproduce_json")
+  expectedText         String?       @map("expected_text")
+  actualText           String?       @map("actual_text")
+  impactText           String?       @map("impact_text")
+  environmentText      String?       @map("environment_text")
+  rawResponseJson      Json?         @map("raw_response_json")
+  errorText            String?       @map("error_text")
+  case                 Case          @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  createdByUser        User          @relation("AIDraftCreatedBy", fields: [createdByUserId], references: [id], onDelete: Restrict)
+  createdAt            DateTime      @default(now()) @map("created_at")
+  updatedAt            DateTime      @updatedAt @map("updated_at")
+
+  @@index([caseId, createdAt])
+  @@map("ai_drafts")
+}
+
+model LinearWorkspace {
+  id                   String               @id @default(cuid())
+  organizationId       String               @map("organization_id")
+  providerType         LinearProviderType   @map("provider_type")
+  workspaceName        String               @map("workspace_name")
+  accessTokenEncrypted String               @map("access_token_encrypted")
+  organization         Organization         @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  projectMappings      LinearProjectMapping[]
+  issueLinks           LinearIssueLink[]
+  createdAt            DateTime             @default(now()) @map("created_at")
+  updatedAt            DateTime             @updatedAt @map("updated_at")
+
+  @@index([organizationId])
+  @@map("linear_workspaces")
+}
+
+model LinearProjectMapping {
+  id                  String          @id @default(cuid())
+  projectId           String          @map("project_id")
+  linearWorkspaceId   String          @map("linear_workspace_id")
+  linearTeamId        String          @map("linear_team_id")
+  defaultLabelIdsJson Json?           @map("default_label_ids_json")
+  defaultPriority     Int?            @map("default_priority")
+  project             Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  linearWorkspace     LinearWorkspace @relation(fields: [linearWorkspaceId], references: [id], onDelete: Cascade)
+  createdAt           DateTime        @default(now()) @map("created_at")
+  updatedAt           DateTime        @updatedAt @map("updated_at")
+
+  @@unique([projectId, linearWorkspaceId])
+  @@index([linearWorkspaceId])
+  @@map("linear_project_mappings")
+}
+
+model LinearIssueLink {
+  id                    String          @id @default(cuid())
+  caseId                String          @unique @map("case_id")
+  linearWorkspaceId     String          @map("linear_workspace_id")
+  linearIssueId         String          @map("linear_issue_id")
+  linearIssueIdentifier String          @map("linear_issue_identifier")
+  linearIssueUrl        String          @map("linear_issue_url")
+  case                  Case            @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  linearWorkspace       LinearWorkspace @relation(fields: [linearWorkspaceId], references: [id], onDelete: Cascade)
+  createdAt             DateTime        @default(now()) @map("created_at")
+
+  @@index([linearWorkspaceId])
+  @@map("linear_issue_links")
+}

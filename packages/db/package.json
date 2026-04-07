@@ -2,11 +2,40 @@
   "name": "@silver/db",
   "private": true,
   "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "prisma"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
-    "build": "echo \"No build step configured yet for @silver/db\"",
-    "dev": "echo \"No dev step configured yet for @silver/db\"",
-    "lint": "echo \"No lint step configured yet for @silver/db\"",
-    "test": "echo \"No tests configured yet for @silver/db\"",
-    "typecheck": "echo \"No typecheck step configured yet for @silver/db\""
+    "build": "pnpm run prisma:generate && tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "lint": "pnpm run prisma:validate && tsc -p tsconfig.json --noEmit",
+    "migrate:dev": "prisma migrate dev",
+    "prisma:generate": "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/silver_engine?schema=public prisma generate",
+    "prisma:validate": "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/silver_engine?schema=public prisma validate",
+    "seed": "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/silver_engine?schema=public prisma db seed",
+    "test": "pnpm run prisma:validate && node --test ./test/schema.test.mjs",
+    "typecheck": "pnpm run prisma:generate && tsc -p tsconfig.json --noEmit"
+  },
+  "prisma": {
+    "seed": "node ./prisma/seed.mjs"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.6.0",
+    "@prisma/client": "^7.6.0",
+    "pg": "^8.20.0",
+    "prisma": "^7.6.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.20.0"
   }
 }

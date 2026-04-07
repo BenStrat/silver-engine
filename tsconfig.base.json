@@ -9,16 +9,23 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
     "paths": {
-      "@silver/ui/*": ["packages/ui/*"],
-      "@silver/types/*": ["packages/types/*"],
-      "@silver/db/*": ["packages/db/*"],
-      "@silver/auth/*": ["packages/auth/*"],
-      "@silver/capture/*": ["packages/capture/*"],
-      "@silver/linear/*": ["packages/linear/*"],
-      "@silver/ai/*": ["packages/ai/*"],
-      "@silver/config/*": ["packages/config/*"]
+      "@silver/ui": ["./packages/ui/src/index.ts"],
+      "@silver/ui/*": ["./packages/ui/src/*"],
+      "@silver/types": ["./packages/types/src/index.ts"],
+      "@silver/types/*": ["./packages/types/src/*"],
+      "@silver/db": ["./packages/db/src/index.ts"],
+      "@silver/db/*": ["./packages/db/src/*"],
+      "@silver/auth": ["./packages/auth/src/index.ts"],
+      "@silver/auth/*": ["./packages/auth/src/*"],
+      "@silver/capture": ["./packages/capture/src/index.ts"],
+      "@silver/capture/*": ["./packages/capture/src/*"],
+      "@silver/linear": ["./packages/linear/src/index.ts"],
+      "@silver/linear/*": ["./packages/linear/src/*"],
+      "@silver/ai": ["./packages/ai/src/index.ts"],
+      "@silver/ai/*": ["./packages/ai/src/*"],
+      "@silver/config": ["./packages/config/src/index.ts"],
+      "@silver/config/*": ["./packages/config/src/*"]
     }
   }
 }
