@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@silver/ui/*": ["packages/ui/*"],
+      "@silver/types/*": ["packages/types/*"],
+      "@silver/db/*": ["packages/db/*"],
+      "@silver/auth/*": ["packages/auth/*"],
+      "@silver/capture/*": ["packages/capture/*"],
+      "@silver/linear/*": ["packages/linear/*"],
+      "@silver/ai/*": ["packages/ai/*"],
+      "@silver/config/*": ["packages/config/*"]
+    }
+  }
+}

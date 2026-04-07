@@ -1,0 +1,12 @@
+{
+  "name": "@silver/types",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "build": "echo \"No build step configured yet for @silver/types\"",
+    "dev": "echo \"No dev step configured yet for @silver/types\"",
+    "lint": "echo \"No lint step configured yet for @silver/types\"",
+    "test": "echo \"No tests configured yet for @silver/types\"",
+    "typecheck": "echo \"No typecheck step configured yet for @silver/types\""
+  }
+}
