@@ -3,10 +3,26 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "build": "echo \"No build step configured yet for @silver/web\"",
-    "dev": "echo \"No dev step configured yet for @silver/web\"",
-    "lint": "echo \"No lint step configured yet for @silver/web\"",
+    "build": "next build",
+    "dev": "next dev",
+    "lint": "eslint",
+    "start": "next start",
     "test": "echo \"No tests configured yet for @silver/web\"",
-    "typecheck": "echo \"No typecheck step configured yet for @silver/web\""
+    "typecheck": "tsc --project tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "next": "16.2.2",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^25.5.2",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.2",
+    "tailwindcss": "^4",
+    "typescript": "^5.8.0"
   }
 }

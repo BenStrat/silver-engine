@@ -1,0 +1,88 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "baseUrl": ".",
+    "noEmit": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./*"
+      ],
+      "@silver/ui": [
+        "../../packages/ui/src/index.ts"
+      ],
+      "@silver/ui/*": [
+        "../../packages/ui/src/*"
+      ],
+      "@silver/types": [
+        "../../packages/types/src/index.ts"
+      ],
+      "@silver/types/*": [
+        "../../packages/types/src/*"
+      ],
+      "@silver/db": [
+        "../../packages/db/src/index.ts"
+      ],
+      "@silver/db/*": [
+        "../../packages/db/src/*"
+      ],
+      "@silver/auth": [
+        "../../packages/auth/src/index.ts"
+      ],
+      "@silver/auth/*": [
+        "../../packages/auth/src/*"
+      ],
+      "@silver/capture": [
+        "../../packages/capture/src/index.ts"
+      ],
+      "@silver/capture/*": [
+        "../../packages/capture/src/*"
+      ],
+      "@silver/linear": [
+        "../../packages/linear/src/index.ts"
+      ],
+      "@silver/linear/*": [
+        "../../packages/linear/src/*"
+      ],
+      "@silver/ai": [
+        "../../packages/ai/src/index.ts"
+      ],
+      "@silver/ai/*": [
+        "../../packages/ai/src/*"
+      ],
+      "@silver/config": [
+        "../../packages/config/src/index.ts"
+      ],
+      "@silver/config/*": [
+        "../../packages/config/src/*"
+      ]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
