@@ -1,11 +1,16 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
+import prismaClientPackage from "@prisma/client";
+import type { PrismaClient as PrismaClientType } from "@prisma/client";
 import { Pool } from "pg";
+
+const { PrismaClient } = prismaClientPackage as {
+  PrismaClient: new (...args: any[]) => PrismaClientType;
+};
 
 const globalForPrisma = globalThis as typeof globalThis & {
   __silverDatabaseUrl?: string;
   __silverPgPool?: Pool;
-  __silverPrismaClient?: PrismaClient;
+  __silverPrismaClient?: PrismaClientType;
 };
 
 const readDatabaseUrl = () => {
