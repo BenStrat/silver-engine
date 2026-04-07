@@ -1,0 +1,12 @@
+{
+  "name": "@silver/api",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "build": "echo \"No build step configured yet for @silver/api\"",
+    "dev": "echo \"No dev step configured yet for @silver/api\"",
+    "lint": "echo \"No lint step configured yet for @silver/api\"",
+    "test": "echo \"No tests configured yet for @silver/api\"",
+    "typecheck": "echo \"No typecheck step configured yet for @silver/api\""
+  }
+}

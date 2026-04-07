@@ -1,0 +1,12 @@
+{
+  "name": "@silver/capture",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "build": "echo \"No build step configured yet for @silver/capture\"",
+    "dev": "echo \"No dev step configured yet for @silver/capture\"",
+    "lint": "echo \"No lint step configured yet for @silver/capture\"",
+    "test": "echo \"No tests configured yet for @silver/capture\"",
+    "typecheck": "echo \"No typecheck step configured yet for @silver/capture\""
+  }
+}
