@@ -3,23 +3,25 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "main": "./dist/server.js",
-  "types": "./dist/server.d.ts",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
   "files": [
-    "dist"
+    "api",
+    "dist",
+    "vercel.json"
   ],
   "exports": {
     ".": {
-      "types": "./dist/server.d.ts",
-      "import": "./dist/server.js"
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js"
     }
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsx src/server.ts",
     "lint": "tsc -p tsconfig.json --noEmit",
-    "start": "node --enable-source-maps dist/server.js",
-    "test": "node --import tsx --test ./test/api-routes.test.mjs",
+    "start": "node --enable-source-maps dist/src/server.js",
+    "test": "node --import tsx --test ./test/*.test.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
